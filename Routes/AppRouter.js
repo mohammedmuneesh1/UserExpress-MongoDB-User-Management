@@ -13,12 +13,32 @@ const storage = multer.diskStorage({destination:'userphoto/', filename:(req,file
 const upload = multer({storage})
 //multer end
 
-router.post('/register',tryCatch(controller.register))
-router.post('/login',tryCatch(controller.login))
-router.post('/users',verifyToken,upload.single('photo1'),tryCatch(controller.createUser))
-//photo1 is the name given for file 
-router.get('/users',verifyToken,tryCatch(controller.showUsers))
-router.get('/users/:id',verifyToken,tryCatch(controller.userById))
- router.put('/users/:id',verifyToken,tryCatch(controller.updateById))
- router.delete('/users/:id',verifyToken,tryCatch(controller.deleteById))
+router
+.post('/register',tryCatch(controller.register))
+.post('/login',tryCatch(controller.login))
+.use(verifyToken)
+
+// //photo1 is the name given for file 
+.post('/users',upload.single('photo1'),tryCatch(controller.createUser))
+.get('/users',tryCatch(controller.showUsers))
+.get('/users/:id',tryCatch(controller.userById))
+.put('/users/:id',tryCatch(controller.updateById))
+.delete('/users/:id',tryCatch(controller.deleteById))
+
+
+
+//short version of the above code 
+// router
+//   .post('/register', tryCatch(controller.register))
+//   .post('/login', tryCatch(controller.login))
+//   .route('/users')
+//   .post(verifyToken, upload.single('photo1'), tryCatch(controller.createUser))
+//   .get(verifyToken, tryCatch(controller.showUsers));
+// router
+//   .route('/users/:id')
+//   .get(verifyToken, tryCatch(controller.userById))
+//   .put(verifyToken, tryCatch(controller.updateById))
+//   .delete(verifyToken, tryCatch(controller.deleteById));
+
+
 module.exports = router
